@@ -1,0 +1,17 @@
+for special issue:
+
+	* write about V_3, V_4, etc doesn't work - assumes long fixed chains
+
+	
+random crap:
+	* retake issue
+		* keep internal count of taken actions, separate from model to identify retake language
+
+	* one-step probability of action becoming recommended
+		* like occupation frequency (kahn & poupart) but for actions
+		* use to filter afdv explanations
+
+	* add retake language to concept base
+
+	* More explicit model checking?
+		* checking current state against goal state and explaining what's left to do?

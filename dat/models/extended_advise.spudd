@@ -1,0 +1,674 @@
+// Hand coded model of an advising domain.
+//	Nick Mattei
+//	4-7-2010
+
+
+/* variables */
+/* Good, Pass, Fail, Not_Taken */
+/* GPA doesn't change, its just an indicator.
+(variables
+	(CS115 NotTaken Good Pass Fail)
+	(CS215 NotTaken Good Pass Fail)
+	(CS216 NotTaken Good Pass Fail)
+	(CS275 NotTaken Good Pass Fail)
+	(CS315 NotTaken Good Pass Fail)
+	(MA114 NotTaken Good Pass Fail)
+	(GPA Good Pass Low)
+)
+
+
+
+/* reuseable DD's.  Define DD's that get used many times... makes parsing harder, reading easier. */
+
+dd GPA_No_Change
+(GPA (Good (GPA' (Good (1.0)) (Pass (0.0)) (Low (0.0))))
+     (Pass (GPA' (Good (0.0)) (Pass (1.0)) (Low (0.0))))
+     (Low  (GPA' (Good (0.0)) (Pass (0.0)) (Low (1.0)))))
+enddd
+
+dd CS115_No_Change
+(CS115	 ( Good (CS115' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (CS115' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (CS115' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (CS115' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd CS215_No_Change
+(CS215 ( Good (CS215' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Pass (CS215' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Fail (CS215' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+     ( NotTaken (CS215' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd CS216_No_Change
+(CS216 ( Good (CS216' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Pass (CS216' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Fail (CS216' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+     ( NotTaken (CS216' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd CS275_No_Change
+(CS275 ( Good (CS275' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Pass (CS275' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Fail (CS275' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+     ( NotTaken (CS275' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd CS315_No_Change
+(CS315 ( Good (CS315' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Pass (CS315' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Fail (CS315' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+     ( NotTaken (CS315' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd MA114_No_Change
+(MA114 ( Good (MA114' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Pass (MA114' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+     ( Fail (MA114' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+     ( NotTaken (MA114' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+
+dd CS115_Update
+(GPA 	(Good
+		(CS115 (Good 		(CS115' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		       (Pass 		(CS115' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		       (Fail 		(CS115' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00))))
+		       (NotTaken	(CS115' (Good (0.34)) (Pass (0.33)) (Fail (0.30)) (NotTaken (0.03))))
+		)
+	)
+	(Pass
+		(CS115  (Good	(CS115' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+			(Pass		(CS115' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+			(Fail		(CS115' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00))))
+			(NotTaken	(CS115' (Good (0.20)) (Pass (0.40)) (Fail (0.37)) (NotTaken (0.03))))
+		)
+	)
+	(Low
+		(CS115 (Good	(CS115' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+			(Pass		(CS115' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+			(Fail		(CS115' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+			(NotTaken	(CS115' (Good (0.05)) (Pass (0.45)) (Fail (0.47)) (NotTaken (0.03))))
+		)
+	)
+)
+enddd
+
+
+dd CS215_Update
+(GPA 	(Good
+		(CS215 (Good
+				(CS115 (Good 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS115 (Good 		(CS215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS115 (Good 		(CS215' (Good (0.25)) (Pass (0.70)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(CS215' (Good (0.10)) (Pass (0.80)) (Fail (0.10)) (NotTaken (0.00))))
+		        	   (Fail 		(CS215' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(CS215' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS115 (Good 		(CS215' (Good (0.90)) (Pass (0.05)) (Fail (0.02)) (NotTaken (0.03))))
+				       (Pass 		(CS215' (Good (0.70)) (Pass (0.22)) (Fail (0.05)) (NotTaken (0.03))))
+		        	   (Fail 		(CS215' (Good (0.50)) (Pass (0.37)) (Fail (0.10)) (NotTaken (0.03))))
+				       (NotTaken 	(CS215' (Good (0.34)) (Pass (0.33)) (Fail (0.30)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Pass
+		(CS215 (Good
+				(CS115 (Good 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS115 (Good 		(CS215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS115 (Good 		(CS215' (Good (0.20)) (Pass (0.75)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(CS215' (Good (0.05)) (Pass (0.85)) (Fail (0.10)) (NotTaken (0.00))))
+		        	   (Fail 		(CS215' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(CS215' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS115 (Good 		(CS215' (Good (0.77)) (Pass (0.15)) (Fail (0.05)) (NotTaken (0.03))))
+				       (Pass 		(CS215' (Good (0.55)) (Pass (0.32)) (Fail (0.10)) (NotTaken (0.03))))
+		        	   (Fail 		(CS215' (Good (0.22)) (Pass (0.55)) (Fail (0.20)) (NotTaken (0.03))))
+				       (NotTaken 	(CS215' (Good (0.20)) (Pass (0.40)) (Fail (0.37)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Low
+		(CS215 (Good
+				(CS115 (Good 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS115 (Good 		(CS215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS115 (Good 		(CS215' (Good (0.10)) (Pass (0.70)) (Fail (0.20)) (NotTaken (0.00))))
+				       (Pass 		(CS215' (Good (0.05)) (Pass (0.65)) (Fail (0.30)) (NotTaken (0.00))))
+		        	   (Fail 		(CS215' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+				       (NotTaken 	(CS215' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS115 (Good 		(CS215' (Good (0.60)) (Pass (0.25)) (Fail (0.12)) (NotTaken (0.03))))
+				       (Pass 		(CS215' (Good (0.40)) (Pass (0.40)) (Fail (0.17)) (NotTaken (0.03))))
+		        	   (Fail 		(CS215' (Good (0.10)) (Pass (0.55)) (Fail (0.32)) (NotTaken (0.03))))
+				       (NotTaken 	(CS215' (Good (0.05)) (Pass (0.45)) (Fail (0.47)) (NotTaken (0.03)))))
+			)
+		)
+	)
+)
+enddd
+
+
+
+dd CS216_Update
+(GPA 	(Good
+		(CS216 (Good
+				(CS215 (Good 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS215 (Good 		(CS216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS215 (Good 		(CS216' (Good (0.25)) (Pass (0.70)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(CS216' (Good (0.10)) (Pass (0.80)) (Fail (0.10)) (NotTaken (0.00))))
+		        	   (Fail 		(CS216' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(CS216' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS215 (Good 		(CS216' (Good (0.90)) (Pass (0.05)) (Fail (0.02)) (NotTaken (0.03))))
+				       (Pass 		(CS216' (Good (0.70)) (Pass (0.22)) (Fail (0.05)) (NotTaken (0.03))))
+		        	   (Fail 		(CS216' (Good (0.50)) (Pass (0.37)) (Fail (0.10)) (NotTaken (0.03))))
+				       (NotTaken 	(CS216' (Good (0.34)) (Pass (0.33)) (Fail (0.30)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Pass
+		(CS216 (Good
+				(CS215 (Good 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS215 (Good 		(CS216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS215 (Good 		(CS216' (Good (0.20)) (Pass (0.75)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(CS216' (Good (0.05)) (Pass (0.85)) (Fail (0.10)) (NotTaken (0.00))))
+		        	   (Fail 		(CS216' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(CS216' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS215 (Good 		(CS216' (Good (0.77)) (Pass (0.15)) (Fail (0.05)) (NotTaken (0.03))))
+				       (Pass 		(CS216' (Good (0.55)) (Pass (0.32)) (Fail (0.10)) (NotTaken (0.03))))
+		        	   (Fail 		(CS216' (Good (0.22)) (Pass (0.55)) (Fail (0.20)) (NotTaken (0.03))))
+				       (NotTaken 	(CS216' (Good (0.20)) (Pass (0.40)) (Fail (0.37)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Low
+		(CS216 (Good
+				(CS215 (Good 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS215 (Good 		(CS216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS215 (Good 		(CS216' (Good (0.10)) (Pass (0.70)) (Fail (0.20)) (NotTaken (0.00))))
+				       (Pass 		(CS216' (Good (0.05)) (Pass (0.65)) (Fail (0.30)) (NotTaken (0.00))))
+		        	   (Fail 		(CS216' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+				       (NotTaken 	(CS216' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS215 (Good 		(CS216' (Good (0.60)) (Pass (0.25)) (Fail (0.12)) (NotTaken (0.03))))
+				       (Pass 		(CS216' (Good (0.40)) (Pass (0.40)) (Fail (0.17)) (NotTaken (0.03))))
+		        	   (Fail 		(CS216' (Good (0.10)) (Pass (0.55)) (Fail (0.32)) (NotTaken (0.03))))
+				       (NotTaken 	(CS216' (Good (0.05)) (Pass (0.45)) (Fail (0.47)) (NotTaken (0.03)))))
+			)
+		)
+	)
+)
+enddd
+
+
+
+dd CS275_Update
+(CS275 	(Good
+		(MA114 (Good
+				(CS216 (Good 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS216 (Good 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Fail
+				(CS216 (Good 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(NotTaken
+				(CS216 (Good 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS275' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+		)
+	)
+	(Pass
+		(MA114 (Good
+				(CS216 (Good 		(CS275' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.98)) (Pass (0.02)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.90)) (Pass (0.10)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Pass
+				(CS216 (Good 		(CS275' (Good (0.99)) (Pass (0.01)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.90)) (Pass (0.10)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS216 (Good 		(CS275' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.75)) (Pass (0.25)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.65)) (Pass (0.35)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS216 (Good 		(CS275' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.30)) (Pass (0.70)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.10)) (Pass (0.90)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+		)
+	)
+	(Fail
+		(MA114 (Good
+				(CS216 (Good 		(CS275' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Pass
+				(CS216 (Good 		(CS275' (Good (0.80)) (Pass (0.15)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.65)) (Pass (0.25)) (Fail (0.10)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.10)) (Pass (0.40)) (Fail (0.50)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.05)) (Pass (0.45)) (Fail (0.50)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS216 (Good 		(CS275' (Good (0.10)) (Pass (0.70)) (Fail (0.20)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.05)) (Pass (0.65)) (Fail (0.30)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS216 (Good 		(CS275' (Good (0.35)) (Pass (0.50)) (Fail (0.15)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.30)) (Pass (0.50)) (Fail (0.20)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.05)) (Pass (0.45)) (Fail (0.50)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.02)) (Pass (0.08)) (Fail (0.90)) (NotTaken (0.00)))))
+			)
+		)
+	)
+	(NotTaken
+		(MA114 (Good
+				(CS216 (Good 		(CS275' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+				       (NotTaken 	(CS275' (Good (0.60)) (Pass (0.35)) (Fail (0.05)) (NotTaken (0.00)))))
+			)
+			(Pass
+				(CS216 (Good 		(CS275' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS275' (Good (0.75)) (Pass (0.25)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS275' (Good (0.42)) (Pass (0.50)) (Fail (0.05)) (NotTaken (0.03))))
+				       (NotTaken 	(CS275' (Good (0.34)) (Pass (0.34)) (Fail (0.29)) (NotTaken (0.03)))))
+			)
+			(Fail
+				(CS216 (Good 		(CS275' (Good (0.10)) (Pass (0.65)) (Fail (0.20)) (NotTaken (0.05))))
+				       (Pass 		(CS275' (Good (0.05)) (Pass (0.60)) (Fail (0.30)) (NotTaken (0.05))))
+		        	   (Fail 		(CS275' (Good (0.01)) (Pass (0.19)) (Fail (0.70)) (NotTaken (0.10))))
+				       (NotTaken 	(CS275' (Good (0.01)) (Pass (0.10)) (Fail (0.79)) (NotTaken (0.10)))))
+			)
+			(NotTaken
+				(CS216 (Good 		(CS275' (Good (0.30)) (Pass (0.40)) (Fail (0.20)) (NotTaken (0.10))))
+				       (Pass 		(CS275' (Good (0.20)) (Pass (0.53)) (Fail (0.17)) (NotTaken (0.10))))
+		        	   (Fail 		(CS275' (Good (0.10)) (Pass (0.45)) (Fail (0.35)) (NotTaken (0.10))))
+				       (NotTaken 	(CS275' (Good (0.05)) (Pass (0.40)) (Fail (0.45)) (NotTaken (0.10)))))
+			)
+		)
+	)
+)
+enddd
+
+
+
+dd CS315_Update
+(CS315 	(Good
+		(MA114 (Good
+				(CS275 (Good 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(CS275 (Good 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Fail
+				(CS275 (Good 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(NotTaken
+				(CS275 (Good 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(CS315' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+		)
+	)
+	(Pass
+		(MA114 (Good
+				(CS275 (Good 		(CS315' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.98)) (Pass (0.02)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.90)) (Pass (0.10)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Pass
+				(CS275 (Good 		(CS315' (Good (0.99)) (Pass (0.01)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.90)) (Pass (0.10)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS275 (Good 		(CS315' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.75)) (Pass (0.25)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.65)) (Pass (0.35)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS275 (Good 		(CS315' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.30)) (Pass (0.70)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.10)) (Pass (0.90)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+		)
+	)
+	(Fail
+		(MA114 (Good
+				(CS275 (Good 		(CS315' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Pass
+				(CS275 (Good 		(CS315' (Good (0.80)) (Pass (0.15)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.65)) (Pass (0.25)) (Fail (0.10)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.10)) (Pass (0.40)) (Fail (0.50)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.05)) (Pass (0.45)) (Fail (0.50)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(CS275 (Good 		(CS315' (Good (0.10)) (Pass (0.70)) (Fail (0.20)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.05)) (Pass (0.65)) (Fail (0.30)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(CS275 (Good 		(CS315' (Good (0.35)) (Pass (0.50)) (Fail (0.15)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.30)) (Pass (0.50)) (Fail (0.20)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.05)) (Pass (0.45)) (Fail (0.50)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.02)) (Pass (0.08)) (Fail (0.90)) (NotTaken (0.00)))))
+			)
+		)
+	)
+	(NotTaken
+		(MA114 (Good
+				(CS275 (Good 		(CS315' (Good (1.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+				       (NotTaken 	(CS315' (Good (0.60)) (Pass (0.35)) (Fail (0.05)) (NotTaken (0.00)))))
+			)
+			(Pass
+				(CS275 (Good 		(CS315' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(CS315' (Good (0.75)) (Pass (0.25)) (Fail (0.00)) (NotTaken (0.00))))
+		        	   (Fail 		(CS315' (Good (0.42)) (Pass (0.50)) (Fail (0.05)) (NotTaken (0.03))))
+				       (NotTaken 	(CS315' (Good (0.34)) (Pass (0.34)) (Fail (0.29)) (NotTaken (0.03)))))
+			)
+			(Fail
+				(CS275 (Good 		(CS315' (Good (0.10)) (Pass (0.65)) (Fail (0.20)) (NotTaken (0.05))))
+				       (Pass 		(CS315' (Good (0.05)) (Pass (0.60)) (Fail (0.30)) (NotTaken (0.05))))
+		        	   (Fail 		(CS315' (Good (0.01)) (Pass (0.19)) (Fail (0.70)) (NotTaken (0.10))))
+				       (NotTaken 	(CS315' (Good (0.01)) (Pass (0.10)) (Fail (0.79)) (NotTaken (0.10)))))
+			)
+			(NotTaken
+				(CS275 (Good 		(CS315' (Good (0.30)) (Pass (0.40)) (Fail (0.20)) (NotTaken (0.10))))
+				       (Pass 		(CS315' (Good (0.20)) (Pass (0.53)) (Fail (0.17)) (NotTaken (0.10))))
+		        	   (Fail 		(CS315' (Good (0.10)) (Pass (0.45)) (Fail (0.35)) (NotTaken (0.10))))
+				       (NotTaken 	(CS315' (Good (0.05)) (Pass (0.40)) (Fail (0.45)) (NotTaken (0.10)))))
+			)
+		)
+	)
+)
+enddd
+
+
+dd MA114_Update
+(GPA 	(Good
+			(MA114 	(Good ( MA114' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( MA114' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( MA114' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+					(NotTaken ( MA114' (Good (0.70)) (Pass (0.20)) (Fail (0.07)) (NotTaken (0.03))))
+			)
+	)
+	(Pass
+			(MA114 	(Good ( MA114' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( MA114' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( MA114' (Good (0.45)) (Pass (0.45)) (Fail (0.10)) (NotTaken (0.00))))
+					(NotTaken ( MA114' (Good (0.30)) (Pass (0.55)) (Fail (0.15)) (NotTaken (0.00))))
+			)
+	)
+	(Low
+			(MA114 	(Good ( MA114' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( MA114' (Good (0.15)) (Pass (0.85)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( MA114' (Good (0.10)) (Pass (0.45)) (Fail (0.45)) (NotTaken (0.00))))
+					(NotTaken ( MA114' (Good (0.10)) (Pass (0.25)) (Fail (0.50)) (NotTaken (0.15))))
+			)
+	)	
+)
+			
+enddd
+
+/* actions */
+// Note: eventually we want the parser to be able to expand the keyword ALLOTHERS cuz it'll make
+//life easier than doing full enumerations 
+
+
+
+action take_CS115
+	CS115 ( CS115_Update  )
+	CS215 ( CS215_No_Change ) 
+	CS216 ( CS216_No_Change )
+	CS275 ( CS275_No_Change )
+	CS315 ( CS315_No_Change ) 
+	MA114 ( MA114_No_Change )
+	GPA   ( GPA_No_Change )
+endaction
+
+action take_CS215
+	CS115 ( CS115_No_Change )
+	CS215 ( CS215_Update  )
+	CS216 ( CS216_No_Change )
+	CS275 ( CS275_No_Change )
+	CS315 ( CS315_No_Change ) 
+	MA114 ( MA114_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_CS216
+	CS115 ( CS115_No_Change )
+	CS215 ( CS215_No_Change )
+	CS216 ( CS216_Update  )
+	CS275 ( CS275_No_Change )
+	CS315 ( CS315_No_Change ) 
+	MA114 ( MA114_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_CS275
+	CS115 ( CS115_No_Change )
+	CS215 ( CS215_No_Change )
+	CS216 ( CS216_No_Change )
+	CS275 ( CS275_Update    )
+	CS315 ( CS315_No_Change ) 
+	MA114 ( MA114_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_CS315
+	CS115 ( CS115_No_Change )
+	CS215 ( CS215_No_Change )
+	CS216 ( CS216_No_Change )
+	CS275 ( CS275_No_Change )
+	CS315 ( CS315_Update  )
+	MA114 ( MA114_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_MA114
+	CS115 ( CS115_No_Change )
+	CS215 ( CS215_No_Change )
+	CS216 ( CS216_No_Change )
+	CS275 ( CS275_No_Change )
+	CS315 ( CS315_No_Change )
+	MA114 ( MA114_Update )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+
+/* reward */
+/* 3 for each good grade */
+
+dd rw_CS115_Good
+(CS115 (Good (6.0)))
+enddd
+
+dd rw_CS215_Good
+(CS215 (Good (6.0)))
+enddd
+
+dd rw_CS216_Good
+(CS216 (Good (6.0)))
+enddd
+
+dd rw_CS275_Good
+(CS275 (Good (6.0)))
+enddd
+
+dd rw_CS315_Good
+(CS315 (Good (6.0)))
+enddd
+
+/* 1 for each passing grade */
+
+dd rw_CS115_Pass
+(CS115 (Pass (4.0)))
+enddd
+
+dd rw_CS215_Pass
+(CS215 (Pass (4.0)))
+enddd
+
+dd rw_CS216_Pass
+(CS216 (Pass (4.0)))
+enddd
+
+dd rw_CS275_Pass
+(CS275 (Pass (4.0)))
+enddd
+
+dd rw_CS315_Pass
+(CS315 (Pass (4.0)))
+enddd
+
+/* -3 for each Failure*/
+
+dd rw_CS115_Fail
+(CS115 (Fail (0.0)))
+enddd
+
+dd rw_CS215_Fail
+(CS215 (Fail (0.0)))
+enddd
+
+dd rw_CS216_Fail
+(CS216 (Fail (0.0)))
+enddd
+
+dd rw_CS275_Fail
+(CS275 (Fail (0.0)))
+enddd
+
+dd rw_CS315_Fail
+(CS315 (Fail (0.0)))
+enddd
+
+
+reward [+ (rw_CS115_Good) (rw_CS215_Good) (rw_CS216_Good) (rw_CS275_Good) (rw_CS315_Good) (rw_CS115_Pass) (rw_CS215_Pass) (rw_CS216_Pass) (rw_CS275_Pass) (rw_CS315_Pass) (rw_CS115_Fail) (rw_CS215_Fail) (rw_CS216_Fail) (rw_CS275_Fail) (rw_CS315_Fail)]
+
+/* discount */
+discount 0.90
+
+/* tolerance */
+tolerance 0.01
+
+/* horizon */
+horizon 10

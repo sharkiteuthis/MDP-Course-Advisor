@@ -1,0 +1,63 @@
+VAR PSY100
+	Introduction to Psychology 
+	a grade of $$PSY100:VAL$$ in $$PSY100$$
+	Good Pass 0 NotTaken Fail
+VAREND
+VAR PSY215
+	Experimental Psychology
+	a grade of $$PSY215:VAL$$ in $$PSY215$$
+	Good Pass 0 NotTaken Fail
+VAREND
+VAR PSY216
+	Statistics in Psychology
+	a grade of $$PSY216:VAL$$ in $$PSY216$$
+	Good Pass 0 NotTaken Fail
+VAREND
+VAR PSY311
+	Learning and Cognition
+	a grade of $$PSY311:VAL$$ in $$PSY311$$
+	Good Pass 0 NotTaken Fail
+VAREND
+VAR PSY312
+	Brain and Behavior
+	a grade of $$PSY312:VAL$$ in $$PSY312$$
+	Good Pass 0 NotTaken Fail
+VAREND
+VAR PSY313
+	Personality and Individual Difference
+	a grade of $$PSY313:VAL$$ in $$PSY313$$
+	Good Pass 0 NotTaken Fail
+VAREND
+VAR PSY314
+	Social Psychology
+	a grade of $$PSY314:VAL$$ in $$PSY314$$
+	Good Pass 0 NotTaken Fail
+VAREND
+
+ACTION take_PSY100
+	take $$PSY100$$
+ACTION take_PSY215
+	take $$PSY215$$
+ACTION take_PSY216
+	take $$PSY216$$
+ACTION take_PSY311
+	take $$PSY311$$
+ACTION take_PSY312
+	take $$PSY312$$
+ACTION take_PSY313
+	take $$PSY313$$
+ACTION take_PSY314
+	take $$PSY314$$
+
+TIME_STEP semester
+
+GOAL graduation
+	PSY100 Good Pass
+	PSY215 Good Pass
+	PSY216 Good Pass
+	PSY311 Good Pass
+	PSY312 Good Pass
+	PSY313 Good Pass
+	PSY314 Good Pass
+GOALEND
+

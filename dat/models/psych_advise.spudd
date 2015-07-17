@@ -1,0 +1,611 @@
+// Hand coded model of an advising domain.
+//	Nick Mattei
+//	4-7-2010
+
+
+/* variables */
+/* Good, Pass, Fail, Not_Taken */
+/* GPA doesn't change, its just an indicator.
+//PSYCH course MAP
+//PSY100 -- Intro to Psychology
+//PSY215 -- Expirmental Psych
+//PSY216 -- Stats in Psych
+//PSY311 -- Learning and Cognition
+//PSY312 -- Brain and Behavior
+//PSY313 -- Personality and Individual Difference
+//PSY314 -- Social Psych
+
+
+(variables
+	(PSY100 NotTaken Good Pass Fail)
+	(PSY215 NotTaken Good Pass Fail)
+	(PSY216 NotTaken Good Pass Fail)
+	(PSY311 NotTaken Good Pass Fail)
+	(PSY312 NotTaken Good Pass Fail)
+	(PSY313 NotTaken Good Pass Fail)
+	(PSY314 NotTaken Good Pass Fail)
+	(GPA Good Pass Low)
+)
+
+
+/* reuseable DD's.  Define DD's that get used many times... makes parsing harder, reading easier. */
+
+dd GPA_No_Change
+(GPA (Good (GPA' (Good (1.0)) (Pass (0.0)) (Low (0.0))))
+     (Pass (GPA' (Good (0.0)) (Pass (1.0)) (Low (0.0))))
+     (Low  (GPA' (Good (0.0)) (Pass (0.0)) (Low (1.0)))))
+enddd
+
+dd PSY100_No_Change
+(PSY100	 ( Good (PSY100' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY100' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY100' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY100' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd PSY215_No_Change
+(PSY215	 ( Good (PSY215' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY215' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY215' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY215' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd PSY216_No_Change
+(PSY216	 ( Good (PSY216' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY216' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY216' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY216' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd PSY311_No_Change
+(PSY311	 ( Good (PSY311' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY311' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY311' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY311' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd PSY312_No_Change
+(PSY312	 ( Good (PSY312' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY312' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY312' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY312' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd PSY313_No_Change
+(PSY313	 ( Good (PSY313' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY313' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY313' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY313' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+dd PSY314_No_Change
+(PSY314	 ( Good (PSY314' (Good (1.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Pass (PSY314' (Good (0.0)) (Pass (1.0)) (Fail (0.0)) (NotTaken (0.0))))
+		 ( Fail (PSY314' (Good (0.0)) (Pass (0.0)) (Fail (1.0)) (NotTaken (0.0))))
+		 ( NotTaken (PSY314' (Good (0.0)) (Pass (0.0)) (Fail (0.0)) (NotTaken (1.0)))))
+enddd
+
+
+dd PSY100_Update
+(GPA 	(Good
+			(PSY100 (Good ( PSY100' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY100' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY100' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+					(NotTaken ( PSY100' (Good (0.70)) (Pass (0.20)) (Fail (0.07)) (NotTaken (0.03))))
+			)
+	)
+	(Pass
+			(PSY100 	(Good ( PSY100' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY100' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY100' (Good (0.45)) (Pass (0.45)) (Fail (0.10)) (NotTaken (0.00))))
+					(NotTaken ( PSY100' (Good (0.30)) (Pass (0.55)) (Fail (0.15)) (NotTaken (0.00))))
+			)
+	)
+	(Low
+			(PSY100 	(Good ( PSY100' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY100' (Good (0.15)) (Pass (0.85)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY100' (Good (0.10)) (Pass (0.45)) (Fail (0.45)) (NotTaken (0.00))))
+					(NotTaken ( PSY100' (Good (0.10)) (Pass (0.25)) (Fail (0.50)) (NotTaken (0.15))))
+			)
+	)	
+)
+			
+enddd
+
+dd PSY215_Update
+(GPA 	(Good
+		(PSY215 (Good
+				(PSY100 (Good 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(PSY100 (Good 		(PSY215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(PSY215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY215' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(PSY100 (Good 		(PSY215' (Good (0.25)) (Pass (0.70)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(PSY215' (Good (0.10)) (Pass (0.80)) (Fail (0.10)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY215' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY215' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(PSY100 (Good 		(PSY215' (Good (0.90)) (Pass (0.05)) (Fail (0.02)) (NotTaken (0.03))))
+				       (Pass 		(PSY215' (Good (0.70)) (Pass (0.22)) (Fail (0.05)) (NotTaken (0.03))))
+		        	       (Fail 		(PSY215' (Good (0.50)) (Pass (0.37)) (Fail (0.10)) (NotTaken (0.03))))
+				       (NotTaken 	(PSY215' (Good (0.34)) (Pass (0.33)) (Fail (0.30)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Pass
+		(PSY215 (Good
+				(PSY100 (Good 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(PSY100 (Good 		(PSY215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(PSY215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY215' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(PSY100 (Good 		(PSY215' (Good (0.20)) (Pass (0.75)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(PSY215' (Good (0.05)) (Pass (0.85)) (Fail (0.10)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY215' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY215' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(PSY100 (Good 		(PSY215' (Good (0.77)) (Pass (0.15)) (Fail (0.05)) (NotTaken (0.03))))
+				       (Pass 		(PSY215' (Good (0.55)) (Pass (0.32)) (Fail (0.10)) (NotTaken (0.03))))
+		        	       (Fail 		(PSY215' (Good (0.22)) (Pass (0.55)) (Fail (0.20)) (NotTaken (0.03))))
+				       (NotTaken 	(PSY215' (Good (0.20)) (Pass (0.40)) (Fail (0.37)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Low
+		(PSY215 (Good
+				(PSY100 (Good 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(PSY215' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(PSY100 (Good 		(PSY215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(PSY215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY215' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(PSY100 (Good 		(PSY215' (Good (0.10)) (Pass (0.70)) (Fail (0.20)) (NotTaken (0.00))))
+				       (Pass 		(PSY215' (Good (0.05)) (Pass (0.65)) (Fail (0.30)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY215' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY215' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(PSY100 (Good 		(PSY215' (Good (0.60)) (Pass (0.25)) (Fail (0.12)) (NotTaken (0.03))))
+				       (Pass 		(PSY215' (Good (0.40)) (Pass (0.40)) (Fail (0.17)) (NotTaken (0.03))))
+		        	       (Fail 		(PSY215' (Good (0.10)) (Pass (0.55)) (Fail (0.32)) (NotTaken (0.03))))
+				       (NotTaken 	(PSY215' (Good (0.05)) (Pass (0.45)) (Fail (0.47)) (NotTaken (0.03)))))
+			)
+		)
+	)
+)
+enddd
+
+
+dd PSY216_Update
+(GPA 	(Good
+		(PSY216 (Good
+				(PSY100 (Good 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(PSY100 (Good 		(PSY216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(PSY216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY216' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(PSY100 (Good 		(PSY216' (Good (0.25)) (Pass (0.70)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(PSY216' (Good (0.10)) (Pass (0.80)) (Fail (0.10)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY216' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY216' (Good (0.05)) (Pass (0.40)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(PSY100 (Good 		(PSY216' (Good (0.90)) (Pass (0.05)) (Fail (0.02)) (NotTaken (0.03))))
+				       (Pass 		(PSY216' (Good (0.70)) (Pass (0.22)) (Fail (0.05)) (NotTaken (0.03))))
+		        	       (Fail 		(PSY216' (Good (0.50)) (Pass (0.37)) (Fail (0.10)) (NotTaken (0.03))))
+				       (NotTaken 	(PSY216' (Good (0.34)) (Pass (0.33)) (Fail (0.30)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Pass
+		(PSY216 (Good
+				(PSY100 (Good 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(PSY100 (Good 		(PSY216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(PSY216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY216' (Good (0.85)) (Pass (0.15)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(PSY100 (Good 		(PSY216' (Good (0.20)) (Pass (0.75)) (Fail (0.05)) (NotTaken (0.00))))
+				       (Pass 		(PSY216' (Good (0.05)) (Pass (0.85)) (Fail (0.10)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY216' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY216' (Good (0.03)) (Pass (0.42)) (Fail (0.55)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(PSY100 (Good 		(PSY216' (Good (0.77)) (Pass (0.15)) (Fail (0.05)) (NotTaken (0.03))))
+				       (Pass 		(PSY216' (Good (0.55)) (Pass (0.32)) (Fail (0.10)) (NotTaken (0.03))))
+		        	       (Fail 		(PSY216' (Good (0.22)) (Pass (0.55)) (Fail (0.20)) (NotTaken (0.03))))
+				       (NotTaken 	(PSY216' (Good (0.20)) (Pass (0.40)) (Fail (0.37)) (NotTaken (0.03)))))
+			)
+		)
+	)
+	(Low
+		(PSY216 (Good
+				(PSY100 (Good 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (Pass 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+		        	   (Fail 		(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+				       (NotTaken 	(PSY216' (Good (0.00)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00)))))
+			)
+			(Pass
+				(PSY100 (Good 		(PSY216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (Pass 		(PSY216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY216' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00)))))
+			)
+			(Fail
+				(PSY100 (Good 		(PSY216' (Good (0.10)) (Pass (0.70)) (Fail (0.20)) (NotTaken (0.00))))
+				       (Pass 		(PSY216' (Good (0.05)) (Pass (0.65)) (Fail (0.30)) (NotTaken (0.00))))
+		        	       (Fail 		(PSY216' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00))))
+				       (NotTaken 	(PSY216' (Good (0.01)) (Pass (0.40)) (Fail (0.59)) (NotTaken (0.00)))))
+			)
+			(NotTaken
+				(PSY100 (Good 		(PSY216' (Good (0.60)) (Pass (0.25)) (Fail (0.12)) (NotTaken (0.03))))
+				       (Pass 		(PSY216' (Good (0.40)) (Pass (0.40)) (Fail (0.17)) (NotTaken (0.03))))
+		        	       (Fail 		(PSY216' (Good (0.10)) (Pass (0.55)) (Fail (0.32)) (NotTaken (0.03))))
+				       (NotTaken 	(PSY216' (Good (0.05)) (Pass (0.45)) (Fail (0.47)) (NotTaken (0.03)))))
+			)
+		)
+	)
+)
+enddd
+
+dd PSY311_Update
+(PSY215 (Good
+			(PSY311 	(Good ( PSY311' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY311' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY311' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+					(NotTaken ( PSY311' (Good (0.70)) (Pass (0.20)) (Fail (0.07)) (NotTaken (0.03))))
+			)
+	)
+	(Pass
+			(PSY311 	(Good ( PSY311' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY311' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY311' (Good (0.45)) (Pass (0.45)) (Fail (0.10)) (NotTaken (0.00))))
+					(NotTaken ( PSY311' (Good (0.30)) (Pass (0.55)) (Fail (0.15)) (NotTaken (0.00))))
+			)
+	)
+	(Fail
+			(PSY311 	(Good ( PSY311' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY311' (Good (0.15)) (Pass (0.85)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY311' (Good (0.10)) (Pass (0.45)) (Fail (0.45)) (NotTaken (0.00))))
+					(NotTaken ( PSY311' (Good (0.10)) (Pass (0.25)) (Fail (0.50)) (NotTaken (0.15))))
+			)
+	)
+	(NotTaken
+			(PSY311 	(Good ( PSY311' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY311' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY311' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+					(NotTaken ( PSY311' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+			)
+	)
+)
+			
+enddd
+
+dd PSY312_Update
+(PSY215 (Good
+			(PSY312 	(Good ( PSY312' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY312' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY312' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+					(NotTaken ( PSY312' (Good (0.70)) (Pass (0.20)) (Fail (0.07)) (NotTaken (0.03))))
+			)
+	)
+	(Pass
+			(PSY312 	(Good ( PSY312' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY312' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY312' (Good (0.45)) (Pass (0.45)) (Fail (0.10)) (NotTaken (0.00))))
+					(NotTaken ( PSY312' (Good (0.30)) (Pass (0.55)) (Fail (0.15)) (NotTaken (0.00))))
+			)
+	)
+	(Fail
+			(PSY312 	(Good ( PSY312' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY312' (Good (0.15)) (Pass (0.85)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY312' (Good (0.10)) (Pass (0.45)) (Fail (0.45)) (NotTaken (0.00))))
+					(NotTaken ( PSY312' (Good (0.10)) (Pass (0.25)) (Fail (0.50)) (NotTaken (0.15))))
+			)
+	)
+	(NotTaken
+			(PSY312 	(Good ( PSY312' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY312' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY312' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+					(NotTaken ( PSY312' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+			)
+	)
+)
+			
+enddd
+
+dd PSY313_Update
+(PSY215 (Good
+			(PSY313 	(Good ( PSY313' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY313' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY313' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+					(NotTaken ( PSY313' (Good (0.70)) (Pass (0.20)) (Fail (0.07)) (NotTaken (0.03))))
+			)
+	)
+	(Pass
+			(PSY313 	(Good ( PSY313' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY313' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY313' (Good (0.45)) (Pass (0.45)) (Fail (0.10)) (NotTaken (0.00))))
+					(NotTaken ( PSY313' (Good (0.30)) (Pass (0.55)) (Fail (0.15)) (NotTaken (0.00))))
+			)
+	)
+	(Fail
+			(PSY313 	(Good ( PSY313' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY313' (Good (0.15)) (Pass (0.85)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY313' (Good (0.10)) (Pass (0.45)) (Fail (0.45)) (NotTaken (0.00))))
+					(NotTaken ( PSY313' (Good (0.10)) (Pass (0.25)) (Fail (0.50)) (NotTaken (0.15))))
+			)
+	)
+	(NotTaken
+			(PSY313 	(Good ( PSY313' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY313' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY313' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+					(NotTaken ( PSY313' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+			)
+	)
+)
+			
+enddd
+
+dd PSY314_Update
+(PSY215 (Good
+			(PSY314 	(Good ( PSY314' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY314' (Good (0.95)) (Pass (0.05)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY314' (Good (0.75)) (Pass (0.20)) (Fail (0.05)) (NotTaken (0.00))))
+					(NotTaken ( PSY314' (Good (0.70)) (Pass (0.20)) (Fail (0.07)) (NotTaken (0.03))))
+			)
+	)
+	(Pass
+			(PSY314 	(Good ( PSY314' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY314' (Good (0.80)) (Pass (0.20)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY314' (Good (0.45)) (Pass (0.45)) (Fail (0.10)) (NotTaken (0.00))))
+					(NotTaken ( PSY314' (Good (0.30)) (Pass (0.55)) (Fail (0.15)) (NotTaken (0.00))))
+			)
+	)
+	(Fail
+			(PSY314 	(Good ( PSY314' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY314' (Good (0.15)) (Pass (0.85)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY314' (Good (0.10)) (Pass (0.45)) (Fail (0.45)) (NotTaken (0.00))))
+					(NotTaken ( PSY314' (Good (0.10)) (Pass (0.25)) (Fail (0.50)) (NotTaken (0.15))))
+			)
+	)
+	(NotTaken
+			(PSY314 	(Good ( PSY314' (Good (0.0)) (Pass (0.00)) (Fail (0.00)) (NotTaken (1.00))))
+					(Pass ( PSY314' (Good (0.50)) (Pass (0.50)) (Fail (0.00)) (NotTaken (0.00))))
+					(Fail ( PSY314' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+					(NotTaken ( PSY314' (Good (0.05)) (Pass (0.05)) (Fail (0.80)) (NotTaken (0.10))))
+			)
+	)
+)
+			
+enddd
+
+
+
+
+/* actions */
+// Note: eventually we want the parser to be able to expand the keyword ALLOTHERS cuz it'll make
+//life easier than doing full enumerations 
+
+
+
+action take_PSY100
+	PSY100 ( PSY100_Update  )
+	PSY215 ( PSY215_No_Change ) 
+	PSY216 ( PSY216_No_Change )
+	PSY311 ( PSY311_No_Change )
+	PSY312 ( PSY312_No_Change ) 
+	PSY313 ( PSY313_No_Change )
+	PSY314 ( PSY314_No_Change )
+	GPA   ( GPA_No_Change )
+endaction
+
+action take_PSY215
+	PSY100 ( PSY100_No_Change )
+	PSY215 ( PSY215_Update  )
+	PSY216 ( PSY216_No_Change )
+	PSY311 ( PSY311_No_Change )
+	PSY312 ( PSY312_No_Change ) 
+	PSY313 ( PSY313_No_Change )
+	PSY314 ( PSY314_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_PSY216
+	PSY100 ( PSY100_No_Change )
+	PSY215 ( PSY215_No_Change )
+	PSY216 ( PSY216_Update  )
+	PSY311 ( PSY311_No_Change )
+	PSY312 ( PSY312_No_Change ) 
+	PSY313 ( PSY313_No_Change )
+	PSY314 ( PSY314_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_PSY311
+	PSY100 ( PSY100_No_Change )
+	PSY215 ( PSY215_No_Change )
+	PSY216 ( PSY216_No_Change )
+	PSY311 ( PSY311_Update    )
+	PSY312 ( PSY312_No_Change ) 
+	PSY313 ( PSY313_No_Change )
+	PSY314 ( PSY314_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_PSY312
+	PSY100 ( PSY100_No_Change )
+	PSY215 ( PSY215_No_Change )
+	PSY216 ( PSY216_No_Change )
+	PSY311 ( PSY311_No_Change )
+	PSY312 ( PSY312_Update  )
+	PSY313 ( PSY313_No_Change )
+	PSY314 ( PSY314_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_PSY313
+	PSY100 ( PSY100_No_Change )
+	PSY215 ( PSY215_No_Change )
+	PSY216 ( PSY216_No_Change )
+	PSY311 ( PSY311_No_Change )
+	PSY312 ( PSY312_No_Change )
+	PSY313 ( PSY313_Update )
+	PSY314 ( PSY314_No_Change )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+action take_PSY314
+	PSY100 ( PSY100_No_Change )
+	PSY215 ( PSY215_No_Change )
+	PSY216 ( PSY216_No_Change )
+	PSY311 ( PSY311_No_Change )
+	PSY312 ( PSY312_No_Change )
+	PSY313 ( PSY313_No_Change )
+	PSY314 ( PSY314_Update )
+	GPA   ( GPA_No_Change )
+
+endaction
+
+
+/* reward */
+/* 3 for each good grade */
+
+dd rw_PSY100_Good
+(PSY100 (Good (6.0)))
+enddd
+
+dd rw_PSY215_Good
+(PSY215 (Good (6.0)))
+enddd
+
+dd rw_PSY216_Good
+(PSY216 (Good (6.0)))
+enddd
+
+dd rw_PSY311_Good
+(PSY311 (Good (6.0)))
+enddd
+
+dd rw_PSY312_Good
+(PSY312 (Good (6.0)))
+enddd
+
+dd rw_PSY313_Good
+(PSY313 (Good (6.0)))
+enddd
+
+dd rw_PSY314_Good
+(PSY314 (Good (6.0)))
+enddd
+
+/* 1 for each passing grade */
+
+dd rw_PSY100_Pass
+(PSY100 (Pass (4.0)))
+enddd
+
+dd rw_PSY215_Pass
+(PSY215 (Pass (4.0)))
+enddd
+
+dd rw_PSY216_Pass
+(PSY216 (Pass (4.0)))
+enddd
+
+dd rw_PSY311_Pass
+(PSY311 (Pass (4.0)))
+enddd
+
+dd rw_PSY312_Pass
+(PSY312 (Pass (4.0)))
+enddd
+
+dd rw_PSY313_Pass
+(PSY313 (Good (4.0)))
+enddd
+
+dd rw_PSY314_Pass
+(PSY314 (Good (4.0)))
+enddd
+
+/* -3 for each Failure*/
+
+dd rw_PSY100_Fail
+(PSY100 (Fail (0.0)))
+enddd
+
+dd rw_PSY215_Fail
+(PSY215 (Fail (0.0)))
+enddd
+
+dd rw_PSY216_Fail
+(PSY216 (Fail (0.0)))
+enddd
+
+dd rw_PSY311_Fail
+(PSY311 (Fail (0.0)))
+enddd
+
+dd rw_PSY312_Fail
+(PSY312 (Fail (0.0)))
+enddd
+
+dd rw_PSY313_Fail
+(PSY313 (Good (0.0)))
+enddd
+
+dd rw_PSY314_Fail
+(PSY314 (Good (0.0)))
+enddd
+
+reward [+ (rw_PSY100_Good) (rw_PSY215_Good) (rw_PSY216_Good) (rw_PSY311_Good) (rw_PSY312_Good) (rw_PSY313_Good) (rw_PSY314_Good) (rw_PSY100_Pass) (rw_PSY215_Pass) (rw_PSY216_Pass) (rw_PSY311_Pass) (rw_PSY312_Pass) (rw_PSY313_Pass) (rw_PSY314_Pass) (rw_PSY100_Fail) (rw_PSY215_Fail) (rw_PSY216_Fail) (rw_PSY311_Fail) (rw_PSY312_Fail) (rw_PSY313_Fail) (rw_PSY314_Fail)]
+
+/* discount */
+discount 0.90
+
+/* tolerance */
+tolerance 0.01
+
+/* horizon */
+horizon 10

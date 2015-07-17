@@ -1,0 +1,34 @@
+VAR CS115
+	"Introduction to Computer Programming"
+	"a grade of $$CS115:VAL$$ in $$CS115$$"
+	Good Pass Fail
+VAR CS215
+	"Introduction to Program Design"
+	"a grade of $$CS215:VAL$$ in $$CS215$$"
+	Good Pass Fail
+VAR CS216
+	"Introduction to Software Engineering"
+	"a grade of $$CS216:VAL$$ in $$CS216$$"
+	Good Pass Fail
+VAR CS275
+	"Discrete Mathematics"
+	"a grade of $$CS275:VAL$$ in $$CS275$$"
+	Good Pass Fail
+VAR CS315
+	"Algorithm Design"
+	"a grade of $$CS315:VAL$$ in $$CS315$$"
+	Good Pass Fail
+
+ACTION take_CS115
+	"take $$CS115$$"
+ACTION take_CS215
+	"take $$CS215$$"
+ACTION take_CS216
+	"take $$CS216$$"
+ACTION take_CS275
+	"take $$CS275$$"
+ACTION take_CS315
+	"take $$CS315$$"
+
+TIME_STEP
+	"semester"
